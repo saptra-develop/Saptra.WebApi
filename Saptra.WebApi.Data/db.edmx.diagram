@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3e68bed5b55143a0b6344e52aa4f9bd0" Name="Diagram1">
+        <EntityTypeShape EntityType="georreferenciaModel.cCoordinacionesRegion" Width="1.5" PointX="8.25" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cCoordinacionesZona" Width="1.5" PointX="11.25" PointY="28.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cEstatus" Width="1.5" PointX="10.5" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cPeriodos" Width="1.5" PointX="12.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cTipoActividades" Width="1.5" PointX="15.75" PointY="30.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cTipoEstatus" Width="1.5" PointX="8.25" PointY="38.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cTipoFiguras" Width="1.5" PointX="15.75" PointY="34.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cTipoNotificaciones" Width="1.5" PointX="8.25" PointY="41.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.cTiposUsuario" Width="1.5" PointX="15.75" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mLecturaCertificados" Width="1.5" PointX="25.5" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mCoordinacionZonaUsuario" Width="1.5" PointX="13.5" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mEducandosCaptados" Width="1.5" PointX="20.25" PointY="28.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.dDetallePlanSemanal" Width="1.5" PointX="18" PointY="29.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mCheckIn" Width="1.5" PointX="23.25" PointY="29.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mPlanSemanal" Width="1.5" PointX="18" PointY="35.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.dModulos" Width="1.5" PointX="15" PointY="44.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mBitacora" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mMenuGrupo" Width="1.5" PointX="12.75" PointY="57.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mPermisos" Width="1.5" PointX="3" PointY="28.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mRoles" Width="1.5" PointX="0.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mNotificaciones" Width="1.5" PointX="12.75" PointY="36.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mUsuarios" Width="1.5" PointX="6" PointY="26.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="georreferenciaModel.mSolicitudesVehiculo" Width="1.5" PointX="8.25" PointY="44.125" IsExpanded="true" />
+        <AssociationConnector Association="georreferenciaModel.FK_cCoordinacionesRegion_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cCoordinacionesRegion_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cCoordinacionesZona_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cCoordinacionesZona_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCoordinacionZonaUsuario_cCoordinacionesZona" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cEstatus_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cTiposUsuario_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_DetallePlanSemanal_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_dModulos_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_Estatus_TipoEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mLecturaCertificados_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mMenuGrupo_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mNotificaciones_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mPermisos_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mUsuarios_cEstatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_Periodos_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_PlanSemanal_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_Roles_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_TipoActividades_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_TipoFiguras_Estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cPeriodos_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mPlanSemanal_cPeriodos" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cTipoActividades_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_DetallePlanSemanal_TipoActividades" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cTipoEstatus_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cTipoFiguras_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_Usuarios_TipoFiguras" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cTipoNotificaciones_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mNotificaciones_cTipoNotificaciones" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_cTiposUsuario_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mLecturaCertificados_mCheckIn" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mLecturaCertificados_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCoordinacionZonaUsuario_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCoordinacionZonaUsuario_mUsuarios1" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mEducandosCaptados_dDetallePlanSemanal" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mEducandosCaptados_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_dDetallePlanSemanal_mPlanSemanal" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_dDetallePlanSemanal_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCheckIn_dDetallePlanSemanal" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCheckIn_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mNotificaciones_mPlanSemanal" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mPlanSemanal_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_dModulos_mMenuGrupo" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mPermisos_dModulo" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mPermisos_mRol" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_Usuarios_Rolesl" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mNotificaciones_mUsuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="georreferenciaModel.FK_mSolicitudesVehiculo_mUsuarios" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
