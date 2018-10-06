@@ -40,7 +40,7 @@ namespace Saptra.WebApi.Data
             }
             catch (Exception ex)
             {
-                throw ex;// new ApplicationException(ex.Message, ex);
+                throw ex;
             }
         }
     }
