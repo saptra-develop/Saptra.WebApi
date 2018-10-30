@@ -12,15 +12,14 @@ namespace Saptra.WebApi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class cTiposUsuario
+    public partial class mResetPassword
     {
-        public int TipoUsuarioId { get; set; }
-        public System.DateTime FechaCreacion { get; set; }
-        public int UsuarioCreacionId { get; set; }
-        public string DescripcionTipo { get; set; }
-        public int EstatusId { get; set; }
+        public System.Guid Id { get; set; }
+        public int UsuarioId { get; set; }
+        public Nullable<System.DateTime> Fecha { get; set; }
+        public string Liga { get; set; }
+        public Nullable<int> EstatusId { get; set; }
     
-        public virtual cEstatus cEstatus { get; set; }
         public virtual mUsuarios mUsuarios { get; set; }
     }
 }

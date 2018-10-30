@@ -76,6 +76,14 @@
         <AssociationConnector Association="georreferenciaModel.FK_Usuarios_Rolesl" ManuallyRouted="false" />
         <AssociationConnector Association="georreferenciaModel.FK_mNotificaciones_mUsuarios" ManuallyRouted="false" />
         <AssociationConnector Association="georreferenciaModel.FK_mSolicitudesVehiculo_mUsuarios" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="georreferenciaModel.mCoordinacionRegionZonaUsuario" Width="1.5" PointX="13.5" PointY="25" />
+        <EntityTypeShape EntityType="georreferenciaModel.mResetPassword" Width="1.5" PointX="8.25" PointY="32.125" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona" />
+        <AssociationConnector Association="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_mUsuarios" />
+        <AssociationConnector Association="georreferenciaModel.FK_mNotificaciones_mCoordinacionZonaUsuario" />
+        <AssociationConnector Association="georreferenciaModel.FK_mSolicitudesVehiculo_dDetallePlanSemanal" />
+        <AssociationConnector Association="georreferenciaModel.FK_mResetPassword_mUsuarios" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -110,6 +110,15 @@
           <Property Name="EstatusId" Type="int" Nullable="false" />
           <Property Name="CheckInId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="mCoordinacionRegionZonaUsuario">
+          <Key>
+            <PropertyRef Name="CoordinacionRegionZonaId" />
+          </Key>
+          <Property Name="CoordinacionRegionZonaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CoordinacionRegionId" Type="int" Nullable="false" />
+          <Property Name="CoordinacionZonaId" Type="int" Nullable="false" />
+          <Property Name="UsuarioJefeRegionId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="mCoordinacionZonaUsuario">
           <Key>
             <PropertyRef Name="CordinacionZonaUsuarioId" />
@@ -156,6 +165,7 @@
           <Property Name="HoraActividad" Type="time" Precision="7" Nullable="false" />
           <Property Name="CantidadCheckIn" Type="int" Nullable="false" />
           <Property Name="DescripcionActividad" Type="varchar" MaxLength="255" />
+          <Property Name="LugarActividad" Type="varchar" MaxLength="100" />
           <Property Name="ComentariosNoValidacion" Type="varchar" MaxLength="255" />
           <Property Name="ComentariosRechazo" Type="varchar" MaxLength="255" />
           <Property Name="ActividadRechazada" Type="bit" />
@@ -169,6 +179,7 @@
           <Property Name="UsuarioCreacionId" Type="int" Nullable="false" />
           <Property Name="Coordenadas" Type="varchar" MaxLength="1024" Nullable="false" />
           <Property Name="DetallePlanId" Type="int" Nullable="false" />
+          <Property Name="Incidencias" Type="varchar" MaxLength="1024" />
         </EntityType>
         <EntityType Name="mPlanSemanal">
           <Key>
@@ -251,7 +262,18 @@
           <Property Name="TipoNotificacionId" Type="int" Nullable="false" />
           <Property Name="PlanSemanalId" Type="int" Nullable="false" />
           <Property Name="UsuarioId" Type="int" Nullable="false" />
+          <Property Name="CoordinacionZonaUsuarioId" Type="int" />
           <Property Name="FechaCreacion" Type="datetime" />
+        </EntityType>
+        <EntityType Name="mResetPassword">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UsuarioId" Type="int" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Liga" Type="varchar" MaxLength="200" />
+          <Property Name="EstatusId" Type="int" />
         </EntityType>
         <EntityType Name="mUsuarios">
           <Key>
@@ -279,6 +301,8 @@
           <Property Name="VehiculoId" Type="int" Nullable="false" />
           <Property Name="FechaUso" Type="datetime" Nullable="false" />
           <Property Name="SolicitudSipaeId" Type="int" />
+          <Property Name="DetallePlanId" Type="int" Nullable="false" />
+          <Property Name="PlacaVehiculo" Type="varchar" MaxLength="20" />
         </EntityType>
         <Association Name="FK_cCoordinacionesRegion_cEstatus">
           <End Role="cEstatus" Type="Self.cEstatus" Multiplicity="1" />
@@ -532,6 +556,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion">
+          <End Role="cCoordinacionesRegion" Type="Self.cCoordinacionesRegion" Multiplicity="1" />
+          <End Role="mCoordinacionRegionZonaUsuario" Type="Self.mCoordinacionRegionZonaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cCoordinacionesRegion">
+              <PropertyRef Name="CoordinacionRegionId" />
+            </Principal>
+            <Dependent Role="mCoordinacionRegionZonaUsuario">
+              <PropertyRef Name="CoordinacionRegionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona">
+          <End Role="cCoordinacionesZona" Type="Self.cCoordinacionesZona" Multiplicity="1" />
+          <End Role="mCoordinacionRegionZonaUsuario" Type="Self.mCoordinacionRegionZonaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cCoordinacionesZona">
+              <PropertyRef Name="CoordinacionZonaId" />
+            </Principal>
+            <Dependent Role="mCoordinacionRegionZonaUsuario">
+              <PropertyRef Name="CoordinacionZonaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mCoordinacionRegionZonaUsuario_mUsuarios">
+          <End Role="mUsuarios" Type="Self.mUsuarios" Multiplicity="1" />
+          <End Role="mCoordinacionRegionZonaUsuario" Type="Self.mCoordinacionRegionZonaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mUsuarios">
+              <PropertyRef Name="UsuarioId" />
+            </Principal>
+            <Dependent Role="mCoordinacionRegionZonaUsuario">
+              <PropertyRef Name="UsuarioJefeRegionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_mCoordinacionZonaUsuario_cCoordinacionesZona">
           <End Role="cCoordinacionesZona" Type="Self.cCoordinacionesZona" Multiplicity="1" />
           <End Role="mCoordinacionZonaUsuario" Type="Self.mCoordinacionZonaUsuario" Multiplicity="*" />
@@ -664,6 +724,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_mNotificaciones_mCoordinacionZonaUsuario">
+          <End Role="mCoordinacionZonaUsuario" Type="Self.mCoordinacionZonaUsuario" Multiplicity="0..1" />
+          <End Role="mNotificaciones" Type="Self.mNotificaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mCoordinacionZonaUsuario">
+              <PropertyRef Name="CordinacionZonaUsuarioId" />
+            </Principal>
+            <Dependent Role="mNotificaciones">
+              <PropertyRef Name="CoordinacionZonaUsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_mNotificaciones_mPlanSemanal">
           <End Role="mPlanSemanal" Type="Self.mPlanSemanal" Multiplicity="1" />
           <End Role="mNotificaciones" Type="Self.mNotificaciones" Multiplicity="*" />
@@ -745,6 +817,30 @@
             </Principal>
             <Dependent Role="mPlanSemanal">
               <PropertyRef Name="UsuarioCreacionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mResetPassword_mUsuarios">
+          <End Role="mUsuarios" Type="Self.mUsuarios" Multiplicity="1" />
+          <End Role="mResetPassword" Type="Self.mResetPassword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mUsuarios">
+              <PropertyRef Name="UsuarioId" />
+            </Principal>
+            <Dependent Role="mResetPassword">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mSolicitudesVehiculo_dDetallePlanSemanal">
+          <End Role="dDetallePlanSemanal" Type="Self.dDetallePlanSemanal" Multiplicity="1" />
+          <End Role="mSolicitudesVehiculo" Type="Self.mSolicitudesVehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dDetallePlanSemanal">
+              <PropertyRef Name="DetallePlanId" />
+            </Principal>
+            <Dependent Role="mSolicitudesVehiculo">
+              <PropertyRef Name="DetallePlanId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -867,6 +963,7 @@
           <EntitySet Name="cTipoNotificaciones" EntityType="Self.cTipoNotificaciones" Schema="CATALOGO" store:Type="Tables" />
           <EntitySet Name="cTiposUsuario" EntityType="Self.cTiposUsuario" Schema="CATALOGO" store:Type="Tables" />
           <EntitySet Name="mLecturaCertificados" EntityType="Self.mLecturaCertificados" Schema="CERTIFICADOS" store:Type="Tables" />
+          <EntitySet Name="mCoordinacionRegionZonaUsuario" EntityType="Self.mCoordinacionRegionZonaUsuario" Schema="COORDINACIONREGION" store:Type="Tables" />
           <EntitySet Name="mCoordinacionZonaUsuario" EntityType="Self.mCoordinacionZonaUsuario" Schema="COORDINACIONZONA" store:Type="Tables" />
           <EntitySet Name="mEducandosCaptados" EntityType="Self.mEducandosCaptados" Schema="EDUCANDOS" store:Type="Tables" />
           <EntitySet Name="dDetallePlanSemanal" EntityType="Self.dDetallePlanSemanal" Schema="PLANSEMANAL" store:Type="Tables" />
@@ -878,6 +975,7 @@
           <EntitySet Name="mPermisos" EntityType="Self.mPermisos" Schema="SEGURIDAD" store:Type="Tables" />
           <EntitySet Name="mRoles" EntityType="Self.mRoles" Schema="SEGURIDAD" store:Type="Tables" />
           <EntitySet Name="mNotificaciones" EntityType="Self.mNotificaciones" Schema="USUARIOS" store:Type="Tables" />
+          <EntitySet Name="mResetPassword" EntityType="Self.mResetPassword" Schema="USUARIOS" store:Type="Tables" />
           <EntitySet Name="mUsuarios" EntityType="Self.mUsuarios" Schema="USUARIOS" store:Type="Tables" />
           <EntitySet Name="mSolicitudesVehiculo" EntityType="Self.mSolicitudesVehiculo" Schema="VEHICULOS" store:Type="Tables" />
           <AssociationSet Name="FK_cCoordinacionesRegion_cEstatus" Association="Self.FK_cCoordinacionesRegion_cEstatus">
@@ -964,6 +1062,18 @@
             <End Role="mUsuarios" EntitySet="mUsuarios" />
             <End Role="mCheckIn" EntitySet="mCheckIn" />
           </AssociationSet>
+          <AssociationSet Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion" Association="Self.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion">
+            <End Role="cCoordinacionesRegion" EntitySet="cCoordinacionesRegion" />
+            <End Role="mCoordinacionRegionZonaUsuario" EntitySet="mCoordinacionRegionZonaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona" Association="Self.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona">
+            <End Role="cCoordinacionesZona" EntitySet="cCoordinacionesZona" />
+            <End Role="mCoordinacionRegionZonaUsuario" EntitySet="mCoordinacionRegionZonaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mCoordinacionRegionZonaUsuario_mUsuarios" Association="Self.FK_mCoordinacionRegionZonaUsuario_mUsuarios">
+            <End Role="mUsuarios" EntitySet="mUsuarios" />
+            <End Role="mCoordinacionRegionZonaUsuario" EntitySet="mCoordinacionRegionZonaUsuario" />
+          </AssociationSet>
           <AssociationSet Name="FK_mCoordinacionZonaUsuario_cCoordinacionesZona" Association="Self.FK_mCoordinacionZonaUsuario_cCoordinacionesZona">
             <End Role="cCoordinacionesZona" EntitySet="cCoordinacionesZona" />
             <End Role="mCoordinacionZonaUsuario" EntitySet="mCoordinacionZonaUsuario" />
@@ -1008,6 +1118,10 @@
             <End Role="cTipoNotificaciones" EntitySet="cTipoNotificaciones" />
             <End Role="mNotificaciones" EntitySet="mNotificaciones" />
           </AssociationSet>
+          <AssociationSet Name="FK_mNotificaciones_mCoordinacionZonaUsuario" Association="Self.FK_mNotificaciones_mCoordinacionZonaUsuario">
+            <End Role="mCoordinacionZonaUsuario" EntitySet="mCoordinacionZonaUsuario" />
+            <End Role="mNotificaciones" EntitySet="mNotificaciones" />
+          </AssociationSet>
           <AssociationSet Name="FK_mNotificaciones_mPlanSemanal" Association="Self.FK_mNotificaciones_mPlanSemanal">
             <End Role="mPlanSemanal" EntitySet="mPlanSemanal" />
             <End Role="mNotificaciones" EntitySet="mNotificaciones" />
@@ -1035,6 +1149,14 @@
           <AssociationSet Name="FK_mPlanSemanal_mUsuarios" Association="Self.FK_mPlanSemanal_mUsuarios">
             <End Role="mUsuarios" EntitySet="mUsuarios" />
             <End Role="mPlanSemanal" EntitySet="mPlanSemanal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mResetPassword_mUsuarios" Association="Self.FK_mResetPassword_mUsuarios">
+            <End Role="mUsuarios" EntitySet="mUsuarios" />
+            <End Role="mResetPassword" EntitySet="mResetPassword" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mSolicitudesVehiculo_dDetallePlanSemanal" Association="Self.FK_mSolicitudesVehiculo_dDetallePlanSemanal">
+            <End Role="dDetallePlanSemanal" EntitySet="dDetallePlanSemanal" />
+            <End Role="mSolicitudesVehiculo" EntitySet="mSolicitudesVehiculo" />
           </AssociationSet>
           <AssociationSet Name="FK_mSolicitudesVehiculo_mUsuarios" Association="Self.FK_mSolicitudesVehiculo_mUsuarios">
             <End Role="mUsuarios" EntitySet="mUsuarios" />
@@ -1088,6 +1210,7 @@
           <Property Name="EstatusId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="cEstatus" Relationship="Self.FK_cCoordinacionesRegion_cEstatus" FromRole="cCoordinacionesRegion" ToRole="cEstatus" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_cCoordinacionesRegion_mUsuarios" FromRole="cCoordinacionesRegion" ToRole="mUsuarios" />
+          <NavigationProperty Name="mCoordinacionRegionZonaUsuario" Relationship="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion" FromRole="cCoordinacionesRegion" ToRole="mCoordinacionRegionZonaUsuario" />
         </EntityType>
         <EntityType Name="cCoordinacionesZona">
           <Key>
@@ -1101,6 +1224,7 @@
           <NavigationProperty Name="cEstatus" Relationship="Self.FK_cCoordinacionesZona_cEstatus" FromRole="cCoordinacionesZona" ToRole="cEstatus" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_cCoordinacionesZona_mUsuarios" FromRole="cCoordinacionesZona" ToRole="mUsuarios" />
           <NavigationProperty Name="mCoordinacionZonaUsuario" Relationship="Self.FK_mCoordinacionZonaUsuario_cCoordinacionesZona" FromRole="cCoordinacionesZona" ToRole="mCoordinacionZonaUsuario" />
+          <NavigationProperty Name="mCoordinacionRegionZonaUsuario" Relationship="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona" FromRole="cCoordinacionesZona" ToRole="mCoordinacionRegionZonaUsuario" />
         </EntityType>
         <EntityType Name="cEstatus">
           <Key>
@@ -1235,6 +1359,7 @@
           <NavigationProperty Name="cCoordinacionesZona" Relationship="Self.FK_mCoordinacionZonaUsuario_cCoordinacionesZona" FromRole="mCoordinacionZonaUsuario" ToRole="cCoordinacionesZona" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_mCoordinacionZonaUsuario_mUsuarios" FromRole="mCoordinacionZonaUsuario" ToRole="mUsuarios" />
           <NavigationProperty Name="mUsuarios1" Relationship="Self.FK_mCoordinacionZonaUsuario_mUsuarios1" FromRole="mCoordinacionZonaUsuario" ToRole="mUsuarios" />
+          <NavigationProperty Name="mNotificaciones" Relationship="georreferenciaModel.FK_mNotificaciones_mCoordinacionZonaUsuario" FromRole="mCoordinacionZonaUsuario" ToRole="mNotificaciones" />
         </EntityType>
         <EntityType Name="mEducandosCaptados">
           <Key>
@@ -1282,6 +1407,8 @@
           <NavigationProperty Name="mPlanSemanal" Relationship="Self.FK_dDetallePlanSemanal_mPlanSemanal" FromRole="dDetallePlanSemanal" ToRole="mPlanSemanal" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_dDetallePlanSemanal_mUsuarios" FromRole="dDetallePlanSemanal" ToRole="mUsuarios" />
           <NavigationProperty Name="mCheckIn" Relationship="Self.FK_mCheckIn_dDetallePlanSemanal" FromRole="dDetallePlanSemanal" ToRole="mCheckIn" />
+          <Property Name="LugarActividad" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="mSolicitudesVehiculo" Relationship="georreferenciaModel.FK_mSolicitudesVehiculo_dDetallePlanSemanal" FromRole="dDetallePlanSemanal" ToRole="mSolicitudesVehiculo" />
         </EntityType>
         <EntityType Name="mCheckIn">
           <Key>
@@ -1295,6 +1422,7 @@
           <NavigationProperty Name="mLecturaCertificados" Relationship="Self.FK_mLecturaCertificados_mCheckIn" FromRole="mCheckIn" ToRole="mLecturaCertificados" />
           <NavigationProperty Name="dDetallePlanSemanal" Relationship="Self.FK_mCheckIn_dDetallePlanSemanal" FromRole="mCheckIn" ToRole="dDetallePlanSemanal" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_mCheckIn_mUsuarios" FromRole="mCheckIn" ToRole="mUsuarios" />
+          <Property Name="Incidencias" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="mPlanSemanal">
           <Key>
@@ -1398,6 +1526,8 @@
           <NavigationProperty Name="cTipoNotificaciones" Relationship="Self.FK_mNotificaciones_cTipoNotificaciones" FromRole="mNotificaciones" ToRole="cTipoNotificaciones" />
           <NavigationProperty Name="mPlanSemanal" Relationship="Self.FK_mNotificaciones_mPlanSemanal" FromRole="mNotificaciones" ToRole="mPlanSemanal" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_mNotificaciones_mUsuarios" FromRole="mNotificaciones" ToRole="mUsuarios" />
+          <Property Name="CoordinacionZonaUsuarioId" Type="Int32" />
+          <NavigationProperty Name="mCoordinacionZonaUsuario" Relationship="georreferenciaModel.FK_mNotificaciones_mCoordinacionZonaUsuario" FromRole="mNotificaciones" ToRole="mCoordinacionZonaUsuario" />
         </EntityType>
         <EntityType Name="mUsuarios">
           <Key>
@@ -1435,6 +1565,8 @@
           <NavigationProperty Name="mRoles" Relationship="Self.FK_Usuarios_Rolesl" FromRole="mUsuarios" ToRole="mRoles" />
           <NavigationProperty Name="mNotificaciones" Relationship="Self.FK_mNotificaciones_mUsuarios" FromRole="mUsuarios" ToRole="mNotificaciones" />
           <NavigationProperty Name="mSolicitudesVehiculo" Relationship="Self.FK_mSolicitudesVehiculo_mUsuarios" FromRole="mUsuarios" ToRole="mSolicitudesVehiculo" />
+          <NavigationProperty Name="mCoordinacionRegionZonaUsuario" Relationship="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_mUsuarios" FromRole="mUsuarios" ToRole="mCoordinacionRegionZonaUsuario" />
+          <NavigationProperty Name="mResetPassword" Relationship="georreferenciaModel.FK_mResetPassword_mUsuarios" FromRole="mUsuarios" ToRole="mResetPassword" />
         </EntityType>
         <EntityType Name="mSolicitudesVehiculo">
           <Key>
@@ -1447,6 +1579,9 @@
           <Property Name="FechaUso" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SolicitudSipaeId" Type="Int32" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_mSolicitudesVehiculo_mUsuarios" FromRole="mSolicitudesVehiculo" ToRole="mUsuarios" />
+          <Property Name="DetallePlanId" Type="Int32" Nullable="false" />
+          <Property Name="PlacaVehiculo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="dDetallePlanSemanal" Relationship="georreferenciaModel.FK_mSolicitudesVehiculo_dDetallePlanSemanal" FromRole="mSolicitudesVehiculo" ToRole="dDetallePlanSemanal" />
         </EntityType>
         <Association Name="FK_cCoordinacionesRegion_cEstatus">
           <End Role="cEstatus" Type="Self.cEstatus" Multiplicity="1" />
@@ -2240,7 +2375,128 @@
             <End Role="mUsuarios" EntitySet="mUsuarios" />
             <End Role="mSolicitudesVehiculo" EntitySet="mSolicitudesVehiculo" />
           </AssociationSet>
+          <EntitySet Name="mCoordinacionRegionZonaUsuario" EntityType="georreferenciaModel.mCoordinacionRegionZonaUsuario" />
+          <EntitySet Name="mResetPassword" EntityType="georreferenciaModel.mResetPassword" />
+          <AssociationSet Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion" Association="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion">
+            <End Role="cCoordinacionesRegion" EntitySet="cCoordinacionesRegion" />
+            <End Role="mCoordinacionRegionZonaUsuario" EntitySet="mCoordinacionRegionZonaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona" Association="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona">
+            <End Role="cCoordinacionesZona" EntitySet="cCoordinacionesZona" />
+            <End Role="mCoordinacionRegionZonaUsuario" EntitySet="mCoordinacionRegionZonaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mCoordinacionRegionZonaUsuario_mUsuarios" Association="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_mUsuarios">
+            <End Role="mUsuarios" EntitySet="mUsuarios" />
+            <End Role="mCoordinacionRegionZonaUsuario" EntitySet="mCoordinacionRegionZonaUsuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mNotificaciones_mCoordinacionZonaUsuario" Association="georreferenciaModel.FK_mNotificaciones_mCoordinacionZonaUsuario">
+            <End Role="mCoordinacionZonaUsuario" EntitySet="mCoordinacionZonaUsuario" />
+            <End Role="mNotificaciones" EntitySet="mNotificaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mSolicitudesVehiculo_dDetallePlanSemanal" Association="georreferenciaModel.FK_mSolicitudesVehiculo_dDetallePlanSemanal">
+            <End Role="dDetallePlanSemanal" EntitySet="dDetallePlanSemanal" />
+            <End Role="mSolicitudesVehiculo" EntitySet="mSolicitudesVehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mResetPassword_mUsuarios" Association="georreferenciaModel.FK_mResetPassword_mUsuarios">
+            <End Role="mUsuarios" EntitySet="mUsuarios" />
+            <End Role="mResetPassword" EntitySet="mResetPassword" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="mCoordinacionRegionZonaUsuario">
+          <Key>
+            <PropertyRef Name="CoordinacionRegionZonaId" />
+          </Key>
+          <Property Name="CoordinacionRegionZonaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CoordinacionRegionId" Type="Int32" Nullable="false" />
+          <Property Name="CoordinacionZonaId" Type="Int32" Nullable="false" />
+          <Property Name="UsuarioJefeRegionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cCoordinacionesRegion" Relationship="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion" FromRole="mCoordinacionRegionZonaUsuario" ToRole="cCoordinacionesRegion" />
+          <NavigationProperty Name="cCoordinacionesZona" Relationship="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona" FromRole="mCoordinacionRegionZonaUsuario" ToRole="cCoordinacionesZona" />
+          <NavigationProperty Name="mUsuarios" Relationship="georreferenciaModel.FK_mCoordinacionRegionZonaUsuario_mUsuarios" FromRole="mCoordinacionRegionZonaUsuario" ToRole="mUsuarios" />
+        </EntityType>
+        <EntityType Name="mResetPassword">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UsuarioId" Type="Int32" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Liga" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusId" Type="Int32" />
+          <NavigationProperty Name="mUsuarios" Relationship="georreferenciaModel.FK_mResetPassword_mUsuarios" FromRole="mResetPassword" ToRole="mUsuarios" />
+        </EntityType>
+        <Association Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesRegion">
+          <End Type="georreferenciaModel.cCoordinacionesRegion" Role="cCoordinacionesRegion" Multiplicity="1" />
+          <End Type="georreferenciaModel.mCoordinacionRegionZonaUsuario" Role="mCoordinacionRegionZonaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cCoordinacionesRegion">
+              <PropertyRef Name="CoordinacionRegionId" />
+            </Principal>
+            <Dependent Role="mCoordinacionRegionZonaUsuario">
+              <PropertyRef Name="CoordinacionRegionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mCoordinacionRegionZonaUsuario_cCoordinacionesZona">
+          <End Type="georreferenciaModel.cCoordinacionesZona" Role="cCoordinacionesZona" Multiplicity="1" />
+          <End Type="georreferenciaModel.mCoordinacionRegionZonaUsuario" Role="mCoordinacionRegionZonaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cCoordinacionesZona">
+              <PropertyRef Name="CoordinacionZonaId" />
+            </Principal>
+            <Dependent Role="mCoordinacionRegionZonaUsuario">
+              <PropertyRef Name="CoordinacionZonaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mCoordinacionRegionZonaUsuario_mUsuarios">
+          <End Type="georreferenciaModel.mUsuarios" Role="mUsuarios" Multiplicity="1" />
+          <End Type="georreferenciaModel.mCoordinacionRegionZonaUsuario" Role="mCoordinacionRegionZonaUsuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mUsuarios">
+              <PropertyRef Name="UsuarioId" />
+            </Principal>
+            <Dependent Role="mCoordinacionRegionZonaUsuario">
+              <PropertyRef Name="UsuarioJefeRegionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mNotificaciones_mCoordinacionZonaUsuario">
+          <End Type="georreferenciaModel.mCoordinacionZonaUsuario" Role="mCoordinacionZonaUsuario" Multiplicity="0..1" />
+          <End Type="georreferenciaModel.mNotificaciones" Role="mNotificaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mCoordinacionZonaUsuario">
+              <PropertyRef Name="CordinacionZonaUsuarioId" />
+            </Principal>
+            <Dependent Role="mNotificaciones">
+              <PropertyRef Name="CoordinacionZonaUsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mSolicitudesVehiculo_dDetallePlanSemanal">
+          <End Type="georreferenciaModel.dDetallePlanSemanal" Role="dDetallePlanSemanal" Multiplicity="1" />
+          <End Type="georreferenciaModel.mSolicitudesVehiculo" Role="mSolicitudesVehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dDetallePlanSemanal">
+              <PropertyRef Name="DetallePlanId" />
+            </Principal>
+            <Dependent Role="mSolicitudesVehiculo">
+              <PropertyRef Name="DetallePlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mResetPassword_mUsuarios">
+          <End Type="georreferenciaModel.mUsuarios" Role="mUsuarios" Multiplicity="1" />
+          <End Type="georreferenciaModel.mResetPassword" Role="mResetPassword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mUsuarios">
+              <PropertyRef Name="UsuarioId" />
+            </Principal>
+            <Dependent Role="mResetPassword">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2399,6 +2655,7 @@
           <EntitySetMapping Name="dDetallePlanSemanal">
             <EntityTypeMapping TypeName="georreferenciaModel.dDetallePlanSemanal">
               <MappingFragment StoreEntitySet="dDetallePlanSemanal">
+                <ScalarProperty Name="LugarActividad" ColumnName="LugarActividad" />
                 <ScalarProperty Name="DetallePlanId" ColumnName="DetallePlanId" />
                 <ScalarProperty Name="PlanSemanalId" ColumnName="PlanSemanalId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
@@ -2418,6 +2675,7 @@
           <EntitySetMapping Name="mCheckIn">
             <EntityTypeMapping TypeName="georreferenciaModel.mCheckIn">
               <MappingFragment StoreEntitySet="mCheckIn">
+                <ScalarProperty Name="Incidencias" ColumnName="Incidencias" />
                 <ScalarProperty Name="CheckInId" ColumnName="CheckInId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="UsuarioCreacionId" ColumnName="UsuarioCreacionId" />
@@ -2506,6 +2764,7 @@
           <EntitySetMapping Name="mNotificaciones">
             <EntityTypeMapping TypeName="georreferenciaModel.mNotificaciones">
               <MappingFragment StoreEntitySet="mNotificaciones">
+                <ScalarProperty Name="CoordinacionZonaUsuarioId" ColumnName="CoordinacionZonaUsuarioId" />
                 <ScalarProperty Name="NotificacionId" ColumnName="NotificacionId" />
                 <ScalarProperty Name="EstatusId" ColumnName="EstatusId" />
                 <ScalarProperty Name="TipoNotificacionId" ColumnName="TipoNotificacionId" />
@@ -2535,12 +2794,35 @@
           <EntitySetMapping Name="mSolicitudesVehiculo">
             <EntityTypeMapping TypeName="georreferenciaModel.mSolicitudesVehiculo">
               <MappingFragment StoreEntitySet="mSolicitudesVehiculo">
+                <ScalarProperty Name="PlacaVehiculo" ColumnName="PlacaVehiculo" />
+                <ScalarProperty Name="DetallePlanId" ColumnName="DetallePlanId" />
                 <ScalarProperty Name="SolicitudVehiculoId" ColumnName="SolicitudVehiculoId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="UsuarioCreacionId" ColumnName="UsuarioCreacionId" />
                 <ScalarProperty Name="VehiculoId" ColumnName="VehiculoId" />
                 <ScalarProperty Name="FechaUso" ColumnName="FechaUso" />
                 <ScalarProperty Name="SolicitudSipaeId" ColumnName="SolicitudSipaeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mCoordinacionRegionZonaUsuario">
+            <EntityTypeMapping TypeName="georreferenciaModel.mCoordinacionRegionZonaUsuario">
+              <MappingFragment StoreEntitySet="mCoordinacionRegionZonaUsuario">
+                <ScalarProperty Name="UsuarioJefeRegionId" ColumnName="UsuarioJefeRegionId" />
+                <ScalarProperty Name="CoordinacionZonaId" ColumnName="CoordinacionZonaId" />
+                <ScalarProperty Name="CoordinacionRegionId" ColumnName="CoordinacionRegionId" />
+                <ScalarProperty Name="CoordinacionRegionZonaId" ColumnName="CoordinacionRegionZonaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mResetPassword">
+            <EntityTypeMapping TypeName="georreferenciaModel.mResetPassword">
+              <MappingFragment StoreEntitySet="mResetPassword">
+                <ScalarProperty Name="EstatusId" ColumnName="EstatusId" />
+                <ScalarProperty Name="Liga" ColumnName="Liga" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
