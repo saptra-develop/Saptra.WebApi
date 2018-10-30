@@ -25,18 +25,22 @@ namespace Saptra.WebApi.Data
                 {
                     planSemanal = (from ple in db.mPlanSemanal
                                    join pld in db.dDetallePlanSemanal on ple.PlanSemanalId equals pld.PlanSemanalId
-                                   join tac in db.cTipoActividades on pld.TipoActividadId equals tac.TipoActividadId
+                                   /*join tac in db.cTipoActividades on pld.TipoActividadId equals tac.TipoActividadId
                                    join es1 in db.cEstatus on ple.EstatusId equals es1.EstatusId
                                    join te1 in db.cTipoEstatus on es1.TipoEstatusId equals te1.TipoEstatusId
                                    join es2 in db.cEstatus on tac.EstatusId equals es2.EstatusId
-                                   join te2 in db.cTipoEstatus on es2.TipoEstatusId equals te2.TipoEstatusId
-                                   where (es1.NombreEstatus == Globals.EST_VALIDADO &&
+                                   join te2 in db.cTipoEstatus on es2.TipoEstatusId equals te2.TipoEstatusId*/
+                                   where /*(es1.NombreEstatus == Globals.EST_VALIDADO &&
                                          te1.nombreTipoEstatus == Globals.TES_PLAN_SEMANAL) &&
                                          (es2.NombreEstatus == Globals.EST_ACTIVO &&
                                          te2.nombreTipoEstatus == Globals.TES_BORRADO_LOGICO) &&
-                                         tac.RequiereCheckIn == true &&
-                                         ple.UsuarioCreacionId == UsuarioId
+                                         tac.RequiereCheckIn == true &&*/
+                                         ple.UsuarioCreacionId == UsuarioId &&
+                                         ple.PeriodoId == PeriodoId
                                    select ple).Distinct().ToList();
+                    planSemanal.ForEach(i=>{
+                        i.cPeriodos = new cPeriodos() { PeriodoId = i.PeriodoId, DecripcionPeriodo = i.cPeriodos.DecripcionPeriodo };
+                    });
                     db.Configuration.LazyLoadingEnabled = false;
                     db.Configuration.ProxyCreationEnabled = false;
                 }
@@ -62,18 +66,26 @@ namespace Saptra.WebApi.Data
                 using (var db = new SaptraEntities())
                 {
                     detallePlanSemanal = (from pld in db.dDetallePlanSemanal
-                                   join tac in db.cTipoActividades on pld.TipoActividadId equals tac.TipoActividadId
-                                   join es1 in db.cEstatus on pld.EstatusId equals es1.EstatusId
-                                   join te1 in db.cTipoEstatus on es1.TipoEstatusId equals te1.TipoEstatusId
-                                   join es2 in db.cEstatus on tac.EstatusId equals es2.EstatusId
-                                   join te2 in db.cTipoEstatus on es2.TipoEstatusId equals te2.TipoEstatusId
-                                   where (es1.NombreEstatus == Globals.EST_VALIDADO &&
+                                          join pls in db.mPlanSemanal on pld.PlanSemanalId equals pls.PlanSemanalId
+                                   //join tac in db.cTipoActividades on pld.TipoActividadId equals tac.TipoActividadId
+                                   //join es1 in db.cEstatus on pld.EstatusId equals es1.EstatusId
+                                   //join te1 in db.cTipoEstatus on es1.TipoEstatusId equals te1.TipoEstatusId
+                                   //join es2 in db.cEstatus on tac.EstatusId equals es2.EstatusId
+                                   //join te2 in db.cTipoEstatus on es2.TipoEstatusId equals te2.TipoEstatusId
+                                   where /*(es1.NombreEstatus == Globals.EST_VALIDADO &&
                                          te1.nombreTipoEstatus == Globals.TES_PLAN_SEMANAL) &&
                                          (es2.NombreEstatus == Globals.EST_ACTIVO &&
                                          te2.nombreTipoEstatus == Globals.TES_BORRADO_LOGICO) &&
-                                         pld.UsuarioCreacionId == UsuarioId &&
-                                         tac.RequiereCheckIn == true
+                                         pld.UsuarioCreacionId == UsuarioId /*&&
+                                         tac.RequiereCheckIn == true*/
+                                         //pls.PlanSemanalId == PlanSemanalId &&
+                                         pls.UsuarioCreacionId == UsuarioId &&
+                                         pls.PeriodoId == PeriodoId
                                    select pld).ToList();
+                    detallePlanSemanal.ForEach(i=> {
+                        i.mPlanSemanal = new mPlanSemanal() {PlanSemanalId = i.PlanSemanalId, DescripcionPlaneacion = i.mPlanSemanal.DescripcionPlaneacion };
+                        i.cTipoActividades = new cTipoActividades() { TipoActividadId = i.cTipoActividades.TipoActividadId };
+                    });
                     db.Configuration.LazyLoadingEnabled = false;
                     db.Configuration.ProxyCreationEnabled = false;
                 }

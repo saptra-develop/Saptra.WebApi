@@ -14,9 +14,9 @@ namespace Saptra.WebApi.Data
         /// Obtener Periodo actual
         /// </summary>
         /// <returns>periodo actual en base a fecha del sistema</returns>
-        public static cPeriodos GetPeriodo()
+        public static List<cPeriodos> GetPeriodo()
         {
-            var periodos = new cPeriodos();
+            var periodos = new List<cPeriodos>();
             try
             {
                 using (var db = new SaptraEntities())
@@ -27,7 +27,7 @@ namespace Saptra.WebApi.Data
                                   where est.NombreEstatus == Globals.EST_ACTIVO &&
                                         tes.nombreTipoEstatus == Globals.TES_BORRADO_LOGICO &&
                                         (DateTime.Now >= per.FechaInicio && DateTime.Now <= per.FechaFin)
-                                select per).FirstOrDefault();
+                                select per).ToList();
                     db.Configuration.LazyLoadingEnabled = false;
                     db.Configuration.ProxyCreationEnabled = false;
                 }

@@ -180,6 +180,8 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\apisaptra - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\apisaptra - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\apisaptradev - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\apisaptradev - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Saptra.WebApi.Controllers\Saptra.WebApi.Controllers.csproj">

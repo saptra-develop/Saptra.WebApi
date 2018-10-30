@@ -22,7 +22,7 @@ namespace Saptra.WebApi.Data
             {
                 using (var db  = new SaptraEntities())
                 {
-                    loggedUser = (from usr in db.mUsuarios
+                    var user = (from usr in db.mUsuarios
                                     join est in db.cEstatus on usr.EstatusId equals est.EstatusId
                                     join tes in db.cTipoEstatus on est.TipoEstatusId equals tes.TipoEstatusId
                                     join tfg in db.cTipoFiguras on usr.TipoFiguraId equals tfg.TipoFiguraId
@@ -32,9 +32,13 @@ namespace Saptra.WebApi.Data
                                         usr.PasswordUsuario == usuario.PasswordUsuario &&
                                         Globals.CAT_TIPO_FIGURA.Contains(tfg.DescripcionTipoFigura)
                                     select usr).FirstOrDefault();
-                    loggedUser.cTipoFiguras1 = new cTipoFiguras(){DescripcionTipoFigura = loggedUser.cTipoFiguras1.DescripcionTipoFigura};
-                    db.Configuration.LazyLoadingEnabled = false;
-                    db.Configuration.ProxyCreationEnabled = false;
+                    if (user != null)
+                    {
+                        loggedUser = user;
+                        loggedUser.cTipoFiguras1 = new cTipoFiguras() { DescripcionTipoFigura = loggedUser.cTipoFiguras1.DescripcionTipoFigura };
+                        db.Configuration.LazyLoadingEnabled = false;
+                        db.Configuration.ProxyCreationEnabled = false;
+                    }
                 }
                 return loggedUser;
             }
