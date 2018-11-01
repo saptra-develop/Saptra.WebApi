@@ -41,5 +41,19 @@ namespace Saptra.WebApi.Controllers
         {
             return Json(new { Time = DateTime.Now });
         }
+
+        [HttpGet]
+        [Route("MySqlTest")]
+        public IHttpActionResult tesMysql()
+        {
+            try
+            {
+                return Json(new { Status = 1, Datos = MySQLDB.Test(), Error = "", StackTrace = "" });
+            }
+            catch (HttpResponseException ex)
+            {
+                return Json(new { Status = 0, Datos = "", Error = ex.Message, StackTrace = ex.StackTrace });
+            }
+        }
     }
 }
