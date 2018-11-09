@@ -211,6 +211,7 @@
     <None Include="Properties\PublishProfiles\apisaptra - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\apisaptradev - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\apisaptradev - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Saptra.WebApi.Controllers\Saptra.WebApi.Controllers.csproj">

@@ -84,7 +84,14 @@ namespace Saptra.WebApi.Data
                                    select pld).ToList();
                     detallePlanSemanal.ForEach(i=> {
                         i.mPlanSemanal = new mPlanSemanal() {PlanSemanalId = i.PlanSemanalId, DescripcionPlaneacion = i.mPlanSemanal.DescripcionPlaneacion };
-                        i.cTipoActividades = new cTipoActividades() { TipoActividadId = i.cTipoActividades.TipoActividadId };
+                        i.cTipoActividades = new cTipoActividades() {
+                            TipoActividadId = i.cTipoActividades.TipoActividadId,
+                            NombreActividad = i.cTipoActividades.NombreActividad,
+                            DescripcionActividad = i.cTipoActividades.DescripcionActividad,
+                            RequiereCheckIn = i.cTipoActividades.RequiereCheckIn,
+                            ActividadEspecial = i.cTipoActividades.ActividadEspecial,
+                            Mensaje = i.cTipoActividades.Mensaje
+                        };
                     });
                     db.Configuration.LazyLoadingEnabled = false;
                     db.Configuration.ProxyCreationEnabled = false;
