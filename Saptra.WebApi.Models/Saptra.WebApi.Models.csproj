@@ -55,6 +55,7 @@
     <Compile Include="cEstatus.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>
+    <Compile Include="CheckIn.cs" />
     <Compile Include="cPeriodos.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>
@@ -84,6 +85,10 @@
     <Compile Include="dModulos.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>
+    <Compile Include="InaebaPreregistros.cs">
+      <DependentUpon>db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LecturaCertificado.cs" />
     <Compile Include="mBitacora.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>

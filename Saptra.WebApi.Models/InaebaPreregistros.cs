@@ -12,14 +12,14 @@ namespace Saptra.WebApi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class mResetPassword
+    public partial class InaebaPreregistros
     {
-        public System.Guid Id { get; set; }
-        public int UsuarioId { get; set; }
-        public Nullable<System.DateTime> Fecha { get; set; }
-        public string Liga { get; set; }
-        public Nullable<int> EstatusId { get; set; }
-    
-        public virtual mUsuarios mUsuarios { get; set; }
+        public int PreregistroId { get; set; }
+        public string ben_nom { get; set; }
+        public string ben_app { get; set; }
+        public string ben_apm { get; set; }
+        public string ben_nacf { get; set; }
+        public string ben_reg { get; set; }
+        public Nullable<int> num_activ_saptra { get; set; }
     }
 }
