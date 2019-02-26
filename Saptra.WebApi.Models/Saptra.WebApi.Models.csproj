@@ -52,6 +52,9 @@
     <Compile Include="cCoordinacionesZona.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>
+    <Compile Include="CertificadosProgramados.cs">
+      <DependentUpon>db.tt</DependentUpon>
+    </Compile>
     <Compile Include="cEstatus.cs">
       <DependentUpon>db.tt</DependentUpon>
     </Compile>

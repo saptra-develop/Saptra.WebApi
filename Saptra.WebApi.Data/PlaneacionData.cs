@@ -67,21 +67,9 @@ namespace Saptra.WebApi.Data
                 {
                     detallePlanSemanal = (from pld in db.dDetallePlanSemanal
                                           join pls in db.mPlanSemanal on pld.PlanSemanalId equals pls.PlanSemanalId
-                                   //join tac in db.cTipoActividades on pld.TipoActividadId equals tac.TipoActividadId
-                                   //join es1 in db.cEstatus on pld.EstatusId equals es1.EstatusId
-                                   //join te1 in db.cTipoEstatus on es1.TipoEstatusId equals te1.TipoEstatusId
-                                   //join es2 in db.cEstatus on tac.EstatusId equals es2.EstatusId
-                                   //join te2 in db.cTipoEstatus on es2.TipoEstatusId equals te2.TipoEstatusId
-                                   where /*(es1.NombreEstatus == Globals.EST_VALIDADO &&
-                                         te1.nombreTipoEstatus == Globals.TES_PLAN_SEMANAL) &&
-                                         (es2.NombreEstatus == Globals.EST_ACTIVO &&
-                                         te2.nombreTipoEstatus == Globals.TES_BORRADO_LOGICO) &&
-                                         pld.UsuarioCreacionId == UsuarioId /*&&
-                                         tac.RequiereCheckIn == true*/
-                                         //pls.PlanSemanalId == PlanSemanalId &&
-                                         pls.UsuarioCreacionId == UsuarioId &&
-                                         pls.PeriodoId == PeriodoId
-                                   select pld).ToList();
+                                           where pls.UsuarioCreacionId == UsuarioId &&
+                                                 pls.PeriodoId == PeriodoId
+                                           select pld).ToList();
                     detallePlanSemanal.ForEach(i=> {
                         i.mPlanSemanal = new mPlanSemanal() {PlanSemanalId = i.PlanSemanalId, DescripcionPlaneacion = i.mPlanSemanal.DescripcionPlaneacion };
                         i.cTipoActividades = new cTipoActividades() {

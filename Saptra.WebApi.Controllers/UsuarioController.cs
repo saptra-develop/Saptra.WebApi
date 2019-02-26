@@ -31,6 +31,20 @@ namespace Saptra.WebApi.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("PostSession")]
+        public IHttpActionResult PostSession([FromUri]int UsuarioId, [FromUri]bool Logged)
+        {
+            try
+            {
+                return Json(new { Status = 1, Datos = UsuarioData.PostSession(UsuarioId, Logged), Error = "", StackTrace = "" });
+            }
+            catch (HttpResponseException ex)
+            {
+                return Json(new { Status = 0, Datos = UsuarioId, Error = ex.Message, StackTrace = ex.StackTrace });
+            }
+        }
+
         /// <summary>
         /// Obtener fecha y hora del servidor donde se monta
         /// </summary>

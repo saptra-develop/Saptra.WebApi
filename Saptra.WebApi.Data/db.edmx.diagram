@@ -85,6 +85,8 @@
         <AssociationConnector Association="pruebasModel.FK_mNotificaciones_mUsuarios" ManuallyRouted="false" />
         <AssociationConnector Association="pruebasModel.FK_mResetPassword_mUsuarios" ManuallyRouted="false" />
         <AssociationConnector Association="pruebasModel.FK_mSolicitudesVehiculo_mUsuarios" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="pruebasModel.CertificadosProgramados" Width="1.5" PointX="3.375" PointY="4.75" />
+        <AssociationConnector Association="pruebasModel.FK_InaebaPreregistros_dDetallePlanSemanal" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

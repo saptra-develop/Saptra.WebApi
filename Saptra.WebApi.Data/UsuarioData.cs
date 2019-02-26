@@ -23,14 +23,10 @@ namespace Saptra.WebApi.Data
                 using (var db  = new SaptraEntities())
                 {
                     var user = (from usr in db.mUsuarios
-                                    join est in db.cEstatus on usr.EstatusId equals est.EstatusId
-                                    join tes in db.cTipoEstatus on est.TipoEstatusId equals tes.TipoEstatusId
-                                    join tfg in db.cTipoFiguras on usr.TipoFiguraId equals tfg.TipoFiguraId
-                                    where est.NombreEstatus == Globals.EST_ACTIVO &&
-                                          tes.nombreTipoEstatus == Globals.TES_BORRADO_LOGICO &&
+                                    where usr.cEstatus1.NombreEstatus == Globals.EST_ACTIVO &&
                                         usr.LoginUsuario == usuario.LoginUsuario &&
                                         usr.PasswordUsuario == usuario.PasswordUsuario &&
-                                        Globals.CAT_TIPO_FIGURA.Contains(tfg.DescripcionTipoFigura)
+                                        Globals.CAT_TIPO_FIGURA.Contains(usr.cTipoFiguras1.DescripcionTipoFigura)
                                     select usr).FirstOrDefault();
                     if (user != null)
                     {
@@ -43,6 +39,41 @@ namespace Saptra.WebApi.Data
                 return loggedUser;
             }
             catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Notifica si el usuario cerrò sesiòn desde el dispositivo
+        /// </summary>
+        /// <param name="UsuarioId">Usuario</param>
+        /// <param name="Logged">Estatus de login</param>
+        public static mUsuarios PostSession(int UsuarioId, bool Logged) {
+            try
+            {
+                var _usr = new mUsuarios();
+                using (var db = new SaptraEntities())
+                {
+                    var user = (from usr in db.mUsuarios
+                                where usr.cEstatus1.NombreEstatus == Globals.EST_ACTIVO &&
+                                    usr.UsuarioId == UsuarioId &&
+                                    Globals.CAT_TIPO_FIGURA.Contains(usr.cTipoFiguras1.DescripcionTipoFigura)
+                                select usr).FirstOrDefault();
+                    if (user != null)
+                    {
+
+                        user.LoggedUsuario = Logged;
+                        db.SaveChanges();
+                        _usr = user;
+                        db.Configuration.LazyLoadingEnabled = false;
+                        db.Configuration.ProxyCreationEnabled = false;
+                        
+                    }
+                }
+                return _usr;
+            }
+            catch(Exception ex)
             {
                 throw ex;
             }

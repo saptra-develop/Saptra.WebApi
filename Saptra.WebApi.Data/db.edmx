@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="pruebasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="pruebasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="cCoordinacionesRegion">
           <Key>
             <PropertyRef Name="CoordinacionRegionId" />
@@ -111,6 +111,7 @@
           <Property Name="EstatusId" Type="int" Nullable="false" />
           <Property Name="CheckInId" Type="int" Nullable="false" />
           <Property Name="SincronizadoMySQL" Type="bit" />
+          <Property Name="UUID" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="mCoordinacionRegionZonaUsuario">
           <Key>
@@ -152,6 +153,20 @@
           <Property Name="CurpEducando" Type="varchar" MaxLength="18" />
           <Property Name="DetallePlanId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="CertificadosProgramados">
+          <Key>
+            <PropertyRef Name="CertificadosId" />
+          </Key>
+          <Property Name="CertificadosId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mc_id" Type="int" Nullable="false" />
+          <Property Name="mc_nombre" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="mc_curp" Type="varchar" MaxLength="50" />
+          <Property Name="mc_foliocert" Type="varchar" MaxLength="255" />
+          <Property Name="st_desc" Type="varchar" MaxLength="50" />
+          <Property Name="mc_fconclusion" Type="varchar" MaxLength="50" />
+          <Property Name="rfc_figura" Type="varchar" MaxLength="50" />
+          <Property Name="mc_matrnu" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="InaebaPreregistros">
           <Key>
             <PropertyRef Name="PreregistroId" />
@@ -163,6 +178,10 @@
           <Property Name="ben_nacf" Type="varchar" MaxLength="100" />
           <Property Name="ben_reg" Type="varchar" MaxLength="100" />
           <Property Name="num_activ_saptra" Type="int" />
+          <Property Name="mwu_rfc" Type="varchar" MaxLength="50" />
+          <Property Name="ben_curp" Type="varchar" MaxLength="18" />
+          <Property Name="fsit_sasa" Type="varchar" MaxLength="100" />
+          <Property Name="estatus" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="dDetallePlanSemanal">
           <Key>
@@ -183,6 +202,7 @@
           <Property Name="ComentariosNoValidacion" Type="varchar" MaxLength="255" />
           <Property Name="ComentariosRechazo" Type="varchar" MaxLength="255" />
           <Property Name="ActividadRechazada" Type="bit" />
+          <Property Name="SinProspectos" Type="int" />
         </EntityType>
         <EntityType Name="mCheckIn">
           <Key>
@@ -195,6 +215,8 @@
           <Property Name="DetallePlanId" Type="int" Nullable="false" />
           <Property Name="Incidencias" Type="varchar" MaxLength="1024" />
           <Property Name="FotoIncidencia" Type="text" />
+          <Property Name="UUID" Type="varchar" MaxLength="50" />
+          <Property Name="FotoRutaLocal" Type="text" />
         </EntityType>
         <EntityType Name="mPlanSemanal">
           <Key>
@@ -306,6 +328,8 @@
           <Property Name="EmailUsuario" Type="varchar" MaxLength="50" />
           <Property Name="TipoFiguraId" Type="int" />
           <Property Name="RFCUsuario" Type="varchar" MaxLength="13" />
+          <Property Name="LoggedUsuario" Type="bit" />
+          <Property Name="NumeroEmpleado" Type="int" />
         </EntityType>
         <EntityType Name="mSolicitudesVehiculo">
           <Key>
@@ -557,6 +581,18 @@
             </Principal>
             <Dependent Role="cEstatus">
               <PropertyRef Name="TipoEstatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InaebaPreregistros_dDetallePlanSemanal">
+          <End Role="dDetallePlanSemanal" Type="Self.dDetallePlanSemanal" Multiplicity="0..1" />
+          <End Role="InaebaPreregistros" Type="Self.InaebaPreregistros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dDetallePlanSemanal">
+              <PropertyRef Name="DetallePlanId" />
+            </Principal>
+            <Dependent Role="InaebaPreregistros">
+              <PropertyRef Name="num_activ_saptra" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -982,6 +1018,7 @@
           <EntitySet Name="mCoordinacionRegionZonaUsuario" EntityType="Self.mCoordinacionRegionZonaUsuario" Schema="COORDINACIONREGION" store:Type="Tables" />
           <EntitySet Name="mCoordinacionZonaUsuario" EntityType="Self.mCoordinacionZonaUsuario" Schema="COORDINACIONZONA" store:Type="Tables" />
           <EntitySet Name="mEducandosCaptados" EntityType="Self.mEducandosCaptados" Schema="EDUCANDOS" store:Type="Tables" />
+          <EntitySet Name="CertificadosProgramados" EntityType="Self.CertificadosProgramados" Schema="INAEBA" store:Type="Tables" />
           <EntitySet Name="InaebaPreregistros" EntityType="Self.InaebaPreregistros" Schema="INAEBA" store:Type="Tables" />
           <EntitySet Name="dDetallePlanSemanal" EntityType="Self.dDetallePlanSemanal" Schema="PLANSEMANAL" store:Type="Tables" />
           <EntitySet Name="mCheckIn" EntityType="Self.mCheckIn" Schema="PLANSEMANAL" store:Type="Tables" />
@@ -1074,6 +1111,10 @@
           <AssociationSet Name="FK_Estatus_TipoEstatus" Association="Self.FK_Estatus_TipoEstatus">
             <End Role="cTipoEstatus" EntitySet="cTipoEstatus" />
             <End Role="cEstatus" EntitySet="cEstatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InaebaPreregistros_dDetallePlanSemanal" Association="Self.FK_InaebaPreregistros_dDetallePlanSemanal">
+            <End Role="dDetallePlanSemanal" EntitySet="dDetallePlanSemanal" />
+            <End Role="InaebaPreregistros" EntitySet="InaebaPreregistros" />
           </AssociationSet>
           <AssociationSet Name="FK_mCheckIn_dDetallePlanSemanal" Association="Self.FK_mCheckIn_dDetallePlanSemanal">
             <End Role="dDetallePlanSemanal" EntitySet="dDetallePlanSemanal" />
@@ -1212,8 +1253,7 @@
             <End Role="mUsuarios" EntitySet="mUsuarios" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="pruebasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1366,6 +1406,7 @@
           <NavigationProperty Name="cEstatus" Relationship="Self.FK_mLecturaCertificados_cEstatus" FromRole="mLecturaCertificados" ToRole="cEstatus" />
           <NavigationProperty Name="mCheckIn" Relationship="Self.FK_mLecturaCertificados_mCheckIn" FromRole="mLecturaCertificados" ToRole="mCheckIn" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_mLecturaCertificados_mUsuarios" FromRole="mLecturaCertificados" ToRole="mUsuarios" />
+          <Property Name="UUID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="mCoordinacionRegionZonaUsuario">
           <Key>
@@ -1426,6 +1467,11 @@
           <Property Name="ben_nacf" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ben_reg" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="num_activ_saptra" Type="Int32" />
+          <Property Name="mwu_rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ben_curp" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="fsit_sasa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="estatus" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="dDetallePlanSemanal" Relationship="pruebasModel.FK_InaebaPreregistros_dDetallePlanSemanal" FromRole="InaebaPreregistros" ToRole="dDetallePlanSemanal" />
         </EntityType>
         <EntityType Name="dDetallePlanSemanal">
           <Key>
@@ -1453,6 +1499,8 @@
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_dDetallePlanSemanal_mUsuarios" FromRole="dDetallePlanSemanal" ToRole="mUsuarios" />
           <NavigationProperty Name="mCheckIn" Relationship="Self.FK_mCheckIn_dDetallePlanSemanal" FromRole="dDetallePlanSemanal" ToRole="mCheckIn" />
           <NavigationProperty Name="mSolicitudesVehiculo" Relationship="Self.FK_mSolicitudesVehiculo_dDetallePlanSemanal" FromRole="dDetallePlanSemanal" ToRole="mSolicitudesVehiculo" />
+          <Property Name="SinProspectos" Type="Int32" />
+          <NavigationProperty Name="InaebaPreregistros" Relationship="pruebasModel.FK_InaebaPreregistros_dDetallePlanSemanal" FromRole="dDetallePlanSemanal" ToRole="InaebaPreregistros" />
         </EntityType>
         <EntityType Name="mCheckIn">
           <Key>
@@ -1468,6 +1516,8 @@
           <NavigationProperty Name="mLecturaCertificados" Relationship="Self.FK_mLecturaCertificados_mCheckIn" FromRole="mCheckIn" ToRole="mLecturaCertificados" />
           <NavigationProperty Name="dDetallePlanSemanal" Relationship="Self.FK_mCheckIn_dDetallePlanSemanal" FromRole="mCheckIn" ToRole="dDetallePlanSemanal" />
           <NavigationProperty Name="mUsuarios" Relationship="Self.FK_mCheckIn_mUsuarios" FromRole="mCheckIn" ToRole="mUsuarios" />
+          <Property Name="UUID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FotoRutaLocal" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="mPlanSemanal">
           <Key>
@@ -1624,6 +1674,8 @@
           <NavigationProperty Name="mNotificaciones" Relationship="Self.FK_mNotificaciones_mUsuarios" FromRole="mUsuarios" ToRole="mNotificaciones" />
           <NavigationProperty Name="mResetPassword" Relationship="Self.FK_mResetPassword_mUsuarios" FromRole="mUsuarios" ToRole="mResetPassword" />
           <NavigationProperty Name="mSolicitudesVehiculo" Relationship="Self.FK_mSolicitudesVehiculo_mUsuarios" FromRole="mUsuarios" ToRole="mSolicitudesVehiculo" />
+          <Property Name="LoggedUsuario" Type="Boolean" />
+          <Property Name="NumeroEmpleado" Type="Int32" />
         </EntityType>
         <EntityType Name="mSolicitudesVehiculo">
           <Key>
@@ -2531,7 +2583,38 @@
             <End Role="mUsuarios" EntitySet="mUsuarios" />
             <End Role="mSolicitudesVehiculo" EntitySet="mSolicitudesVehiculo" />
           </AssociationSet>
+          <EntitySet Name="CertificadosProgramados" EntityType="pruebasModel.CertificadosProgramados" />
+          <AssociationSet Name="FK_InaebaPreregistros_dDetallePlanSemanal" Association="pruebasModel.FK_InaebaPreregistros_dDetallePlanSemanal">
+            <End Role="dDetallePlanSemanal" EntitySet="dDetallePlanSemanal" />
+            <End Role="InaebaPreregistros" EntitySet="InaebaPreregistros" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="CertificadosProgramados">
+          <Key>
+            <PropertyRef Name="CertificadosId" />
+          </Key>
+          <Property Name="CertificadosId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mc_id" Type="Int32" Nullable="false" />
+          <Property Name="mc_nombre" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="mc_curp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mc_foliocert" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="st_desc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mc_fconclusion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="rfc_figura" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mc_matrnu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_InaebaPreregistros_dDetallePlanSemanal">
+          <End Type="pruebasModel.dDetallePlanSemanal" Role="dDetallePlanSemanal" Multiplicity="0..1" />
+          <End Type="pruebasModel.InaebaPreregistros" Role="InaebaPreregistros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="dDetallePlanSemanal">
+              <PropertyRef Name="DetallePlanId" />
+            </Principal>
+            <Dependent Role="InaebaPreregistros">
+              <PropertyRef Name="num_activ_saptra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2645,6 +2728,7 @@
           <EntitySetMapping Name="mLecturaCertificados">
             <EntityTypeMapping TypeName="pruebasModel.mLecturaCertificados">
               <MappingFragment StoreEntitySet="mLecturaCertificados">
+                <ScalarProperty Name="UUID" ColumnName="UUID" />
                 <ScalarProperty Name="LecturaCertificadoId" ColumnName="LecturaCertificadoId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="UsuarioCreacionId" ColumnName="UsuarioCreacionId" />
@@ -2701,6 +2785,10 @@
           <EntitySetMapping Name="InaebaPreregistros">
             <EntityTypeMapping TypeName="pruebasModel.InaebaPreregistros">
               <MappingFragment StoreEntitySet="InaebaPreregistros">
+                <ScalarProperty Name="estatus" ColumnName="estatus" />
+                <ScalarProperty Name="fsit_sasa" ColumnName="fsit_sasa" />
+                <ScalarProperty Name="ben_curp" ColumnName="ben_curp" />
+                <ScalarProperty Name="mwu_rfc" ColumnName="mwu_rfc" />
                 <ScalarProperty Name="PreregistroId" ColumnName="PreregistroId" />
                 <ScalarProperty Name="ben_nom" ColumnName="ben_nom" />
                 <ScalarProperty Name="ben_app" ColumnName="ben_app" />
@@ -2714,6 +2802,7 @@
           <EntitySetMapping Name="dDetallePlanSemanal">
             <EntityTypeMapping TypeName="pruebasModel.dDetallePlanSemanal">
               <MappingFragment StoreEntitySet="dDetallePlanSemanal">
+                <ScalarProperty Name="SinProspectos" ColumnName="SinProspectos" />
                 <ScalarProperty Name="DetallePlanId" ColumnName="DetallePlanId" />
                 <ScalarProperty Name="PlanSemanalId" ColumnName="PlanSemanalId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
@@ -2735,6 +2824,8 @@
           <EntitySetMapping Name="mCheckIn">
             <EntityTypeMapping TypeName="pruebasModel.mCheckIn">
               <MappingFragment StoreEntitySet="mCheckIn">
+                <ScalarProperty Name="FotoRutaLocal" ColumnName="FotoRutaLocal" />
+                <ScalarProperty Name="UUID" ColumnName="UUID" />
                 <ScalarProperty Name="CheckInId" ColumnName="CheckInId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="UsuarioCreacionId" ColumnName="UsuarioCreacionId" />
@@ -2849,6 +2940,8 @@
           <EntitySetMapping Name="mUsuarios">
             <EntityTypeMapping TypeName="pruebasModel.mUsuarios">
               <MappingFragment StoreEntitySet="mUsuarios">
+                <ScalarProperty Name="NumeroEmpleado" ColumnName="NumeroEmpleado" />
+                <ScalarProperty Name="LoggedUsuario" ColumnName="LoggedUsuario" />
                 <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="EstatusId" ColumnName="EstatusId" />
@@ -2875,6 +2968,21 @@
                 <ScalarProperty Name="SolicitudSipaeId" ColumnName="SolicitudSipaeId" />
                 <ScalarProperty Name="DetallePlanId" ColumnName="DetallePlanId" />
                 <ScalarProperty Name="PlacaVehiculo" ColumnName="PlacaVehiculo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CertificadosProgramados">
+            <EntityTypeMapping TypeName="pruebasModel.CertificadosProgramados">
+              <MappingFragment StoreEntitySet="CertificadosProgramados">
+                <ScalarProperty Name="mc_matrnu" ColumnName="mc_matrnu" />
+                <ScalarProperty Name="rfc_figura" ColumnName="rfc_figura" />
+                <ScalarProperty Name="mc_fconclusion" ColumnName="mc_fconclusion" />
+                <ScalarProperty Name="st_desc" ColumnName="st_desc" />
+                <ScalarProperty Name="mc_foliocert" ColumnName="mc_foliocert" />
+                <ScalarProperty Name="mc_curp" ColumnName="mc_curp" />
+                <ScalarProperty Name="mc_nombre" ColumnName="mc_nombre" />
+                <ScalarProperty Name="mc_id" ColumnName="mc_id" />
+                <ScalarProperty Name="CertificadosId" ColumnName="CertificadosId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

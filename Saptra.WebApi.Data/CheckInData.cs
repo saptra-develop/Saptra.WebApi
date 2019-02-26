@@ -46,6 +46,7 @@ namespace Saptra.WebApi.Data
                                     dDetallePlanSemanal = new dDetallePlanSemanal() { DetallePlanId = i.DetallePlanId },
                                     Incidencias = i.Incidencias,
                                     ImageData = Globals.GetImgBase64(i.FotoIncidencia),
+                                    FotoIncidencia = i.FotoIncidencia,
                                     State = "S",
                                     UUID = ""                                
                                 },

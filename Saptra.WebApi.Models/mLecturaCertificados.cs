@@ -21,6 +21,7 @@ namespace Saptra.WebApi.Models
         public int EstatusId { get; set; }
         public int CheckInId { get; set; }
         public Nullable<bool> SincronizadoMySQL { get; set; }
+        public string UUID { get; set; }
     
         public virtual cEstatus cEstatus { get; set; }
         public virtual mCheckIn mCheckIn { get; set; }
