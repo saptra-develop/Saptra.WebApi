@@ -86,6 +86,19 @@ namespace Saptra.WebApi.Data
                     {
                         foreach (var obj in checks)
                         {
+                            //Validar si checkin ya ha sido enviado anteriormente
+                            var existe_checkin = db.mCheckIn.Where(x=>x.UUID.Equals(obj.CheckIn.UUID)).FirstOrDefault();
+                            if(existe_checkin != null)
+                            {
+                                obj.CheckIn.State = "S";
+                                obj.CheckIn.ImageData = "";
+                                obj.CheckIn.CheckInId = existe_checkin.CheckInId.ToString();
+                                obj.State = "S";
+                                var Certificado = db.mLecturaCertificados.Where(x=>x.CheckInId == existe_checkin.CheckInId).FirstOrDefault();
+                                obj.LecturaCertificadoId = Certificado != null ? Certificado.LecturaCertificadoId : 0;
+                                continue;
+                            }
+
                             var new_check = new mCheckIn()
                             {
                                 FechaCreacion = DateTime.Parse(obj.CheckIn.FechaCreacion),
@@ -93,7 +106,9 @@ namespace Saptra.WebApi.Data
                                 Coordenadas = obj.CheckIn.Coordenadas,
                                 DetallePlanId = obj.CheckIn.dDetallePlanSemanal.DetallePlanId,
                                 Incidencias = obj.CheckIn.Incidencias,
-                                FotoIncidencia = Globals.PathImage(obj.CheckIn.ImageData)
+                                FotoIncidencia = Globals.PathImage(obj.CheckIn.ImageData),
+                                UUID = obj.CheckIn.UUID
+                                
                             };
                             db.mCheckIn.Add(new_check);
                             db.SaveChanges();
@@ -109,7 +124,9 @@ namespace Saptra.WebApi.Data
                                         FechaCreacion = DateTime.Parse(obj.FechaCreacion),
                                         UsuarioCreacionId = obj.UsuarioCreacionId,
                                         FolioCertificado = obj.FolioCertificado,
-                                        CheckInId = new_check.CheckInId
+                                        CheckInId = new_check.CheckInId,
+                                        EstatusId = 5,
+                                        UUID = obj.UUID
                                     };
                                     db.mLecturaCertificados.Add(new_certificado);
                                     db.SaveChanges();
@@ -124,7 +141,8 @@ namespace Saptra.WebApi.Data
                                         {
                                             //Se insenta insertar en Mysql, el resultado del intento se actualiza en la entidad
                                             bool _insert = MySQLDB.PostCheckIn(new_certificado.FolioCertificado, user.RFCUsuario);
-                                            var _certificado = db.mLecturaCertificados.Find(new_certificado);
+                                            var _certificado = db.mLecturaCertificados.Where(s=>s.LecturaCertificadoId == new_certificado.LecturaCertificadoId).FirstOrDefault();
+                                            _certificado.SincronizadoMySQL = _insert;
                                             db.SaveChanges();
                                         }
                                     }

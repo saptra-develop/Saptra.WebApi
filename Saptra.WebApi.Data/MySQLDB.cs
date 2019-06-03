@@ -32,40 +32,48 @@ namespace Saptra.WebApi.Data
         {
             bool insertado = false;
 
-            //Open SSH tunnel
-            PasswordConnectionInfo connectionInfo = new PasswordConnectionInfo(ssh_ip, ssh_port, ssh_user, ssh_password);
-            using (var client = new SshClient(connectionInfo))
+            try
             {
-                client.Connect();
-                if (client.IsConnected)
+
+                //Open SSH tunnel
+                PasswordConnectionInfo connectionInfo = new PasswordConnectionInfo(ssh_ip, ssh_port, ssh_user, ssh_password);
+                using (var client = new SshClient(connectionInfo))
                 {
-                    //Agregar puerto de escucha
-                    var portForwarded = new ForwardedPortLocal(mysql_host, mysql_port, mysql_host, mysql_port);
-                    client.AddForwardedPort(portForwarded);
-                    portForwarded.Start();
-                    using (var mysql_Con = new MySqlConnection("host=" + mysql_host + ";user=" + mysql_user + ";password=\"" + mysql_password + "\";database=" + mysql_db))
-                    using (var mysql_cmd = mysql_Con.CreateCommand())
+                    client.Connect();
+                    if (client.IsConnected)
                     {
-                        //Get data info
-                        mysql_Con.Open();
-                        mysql_cmd.CommandText = "INSERT INTO mProcesoEntrega (mpe_fechareg, mc_matrnu, mpe_rfcfigura) "+
-                                                "VALUES (@FECHA, @MATRICULA, @RFC)";
-                        mysql_cmd.Parameters.Add("@FECHA", System.DateTime.Now.ToLongDateString());
-                        mysql_cmd.Parameters.Add("@MATRICULA", matricula);
-                        mysql_cmd.Parameters.Add("@RFC", rfc);
-                        mysql_cmd.CommandType = CommandType.Text;
-                        //Reportar inserción
-                        insertado = (mysql_cmd.ExecuteNonQuery() > 0) ? true : false;
-                        //Cerrar conexiones
-                        mysql_Con.Close();
-                        portForwarded.Stop();
-                        client.Disconnect();
+                        //Agregar puerto de escucha
+                        var portForwarded = new ForwardedPortLocal(mysql_host, mysql_port, mysql_host, mysql_port);
+                        client.AddForwardedPort(portForwarded);
+                        portForwarded.Start();
+                        using (var mysql_Con = new MySqlConnection("host=" + mysql_host + ";user=" + mysql_user + ";password=\"" + mysql_password + "\";database=" + mysql_db))
+                        using (var mysql_cmd = mysql_Con.CreateCommand())
+                        {
+                            //Get data info
+                            mysql_Con.Open();
+                            mysql_cmd.CommandText = "INSERT INTO mProcesoEntrega (mpe_fechareg, mc_matrnu, mpe_rfcfigura) " +
+                                                    "VALUES (@FECHA, @MATRICULA, @RFC)";
+                            mysql_cmd.Parameters.Add("@FECHA", System.DateTime.Now.ToLongDateString());
+                            mysql_cmd.Parameters.Add("@MATRICULA", matricula);
+                            mysql_cmd.Parameters.Add("@RFC", rfc);
+                            mysql_cmd.CommandType = CommandType.Text;
+                            //Reportar inserción
+                            insertado = (mysql_cmd.ExecuteNonQuery() > 0) ? true : false;
+                            //Cerrar conexiones
+                            mysql_Con.Close();
+                            portForwarded.Stop();
+                            client.Disconnect();
+                        }
+                    }
+                    else
+                    {
+                        insertado = false;
                     }
                 }
-                else
-                {
-                    insertado = false;
-                }
+            }
+            catch
+            {
+                insertado = false;
             }
             return insertado;
         }
