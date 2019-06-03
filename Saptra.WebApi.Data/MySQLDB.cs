@@ -51,11 +51,12 @@ namespace Saptra.WebApi.Data
                         {
                             //Get data info
                             mysql_Con.Open();
-                            mysql_cmd.CommandText = "INSERT INTO mProcesoEntrega (mpe_fechareg, mc_matrnu, mpe_rfcfigura) " +
-                                                    "VALUES (@FECHA, @MATRICULA, @RFC)";
+                            mysql_cmd.CommandText = "INSERT INTO mProcesoEntrega (mpe_fechareg, mc_matrnu, mpe_rfcfigura, st_id) " +
+                                                    "VALUES (@FECHA, @MATRICULA, @RFC, @STATUS)";
                             mysql_cmd.Parameters.Add("@FECHA", System.DateTime.Now.ToLongDateString());
                             mysql_cmd.Parameters.Add("@MATRICULA", matricula);
                             mysql_cmd.Parameters.Add("@RFC", rfc);
+                            mysql_cmd.Parameters.Add("@STATUS", 9);
                             mysql_cmd.CommandType = CommandType.Text;
                             //Reportar inserción
                             insertado = (mysql_cmd.ExecuteNonQuery() > 0) ? true : false;
