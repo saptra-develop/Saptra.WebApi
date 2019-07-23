@@ -21,12 +21,13 @@ namespace Saptra.WebApi.Data
             {
                 using (var db = new SaptraEntities())
                 {
+                    var currentDate = DateTime.Now.Date;
                     periodos = (from per in db.cPeriodos
                                   //join est in db.cEstatus on per.EstatusId equals est.EstatusId
                                   //join tes in db.cTipoEstatus on est.TipoEstatusId equals tes.TipoEstatusId
                                   where /*est.NombreEstatus == Globals.EST_ACTIVO &&
                                         tes.nombreTipoEstatus == Globals.TES_BORRADO_LOGICO &&*/
-                                        (DateTime.Now >= per.FechaInicio && DateTime.Now <= per.FechaFin)
+                                        (currentDate >= per.FechaInicio && currentDate <= per.FechaFin)
                                 select per).ToList();
                     db.Configuration.LazyLoadingEnabled = false;
                     db.Configuration.ProxyCreationEnabled = false;

@@ -53,7 +53,7 @@ namespace Saptra.WebApi.Utils
             {
                 _path = Path.Combine(remote_path, default_image).Replace("\\","/");
             }
-            return _path;
+            return _path.Replace("\\", "/");
         }
 
         /// <summary>
