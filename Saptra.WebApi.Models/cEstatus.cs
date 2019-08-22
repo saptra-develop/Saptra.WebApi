@@ -32,6 +32,7 @@ namespace Saptra.WebApi.Models
             this.mRoles = new HashSet<mRoles>();
             this.cTipoActividades = new HashSet<cTipoActividades>();
             this.cTipoFiguras = new HashSet<cTipoFiguras>();
+            this.mCorreo = new HashSet<mCorreo>();
         }
     
         public int EstatusId { get; set; }
@@ -72,5 +73,7 @@ namespace Saptra.WebApi.Models
         public virtual ICollection<cTipoActividades> cTipoActividades { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<cTipoFiguras> cTipoFiguras { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<mCorreo> mCorreo { get; set; }
     }
 }

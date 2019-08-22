@@ -87,7 +87,9 @@ namespace Saptra.WebApi.Data
                         foreach (var obj in checks)
                         {
                             //Validar si checkin ya ha sido enviado anteriormente
-                            var existe_checkin = db.mCheckIn.Where(x=>x.UUID.Equals(obj.CheckIn.UUID)).FirstOrDefault();
+                            var existe_checkin = db.mCheckIn.Where(x=> x.UsuarioCreacionId == obj.CheckIn.UsuarioCreacionId && 
+                                                                       x.DetallePlanId == obj.CheckIn.dDetallePlanSemanal.DetallePlanId &&
+                                                                       x.UUID.Equals(obj.CheckIn.UUID)).FirstOrDefault();
                             if(existe_checkin != null)
                             {
                                 obj.CheckIn.State = "S";

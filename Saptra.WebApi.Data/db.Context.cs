@@ -53,5 +53,8 @@ namespace Saptra.WebApi.Data
         public virtual DbSet<mUsuarios> mUsuarios { get; set; }
         public virtual DbSet<mSolicitudesVehiculo> mSolicitudesVehiculo { get; set; }
         public virtual DbSet<CertificadosProgramados> CertificadosProgramados { get; set; }
+        public virtual DbSet<cTipoCorreo> cTipoCorreo { get; set; }
+        public virtual DbSet<mCorreo> mCorreo { get; set; }
+        public virtual DbSet<mLogApp> mLogApp { get; set; }
     }
 }

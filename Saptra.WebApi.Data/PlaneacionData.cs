@@ -60,7 +60,8 @@ namespace Saptra.WebApi.Data
                                           join pls in db.mPlanSemanal on pld.PlanSemanalId equals pls.PlanSemanalId
                                            where pls.UsuarioCreacionId == UsuarioId &&
                                                  pls.PeriodoId == PeriodoId &&
-                                                 pls.EstatusId == 2
+                                                 pls.EstatusId == 2 &&
+                                                 pld.cTipoActividades.RequiereCheckIn == true
                                            select pld).ToList();
                     detallePlanSemanal.ForEach(i=> {
                         i.mPlanSemanal = new mPlanSemanal() {PlanSemanalId = i.PlanSemanalId, DescripcionPlaneacion = i.mPlanSemanal.DescripcionPlaneacion };

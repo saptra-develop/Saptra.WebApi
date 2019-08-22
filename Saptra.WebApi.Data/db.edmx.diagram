@@ -87,6 +87,11 @@
         <AssociationConnector Association="pruebasModel.FK_mSolicitudesVehiculo_mUsuarios" ManuallyRouted="false" />
         <EntityTypeShape EntityType="pruebasModel.CertificadosProgramados" Width="1.5" PointX="3.375" PointY="4.75" />
         <AssociationConnector Association="pruebasModel.FK_InaebaPreregistros_dDetallePlanSemanal" />
+        <EntityTypeShape EntityType="pruebasModel.cTipoCorreo" Width="1.5" PointX="5.75" PointY="1.5" />
+        <EntityTypeShape EntityType="pruebasModel.mCorreo" Width="1.5" PointX="13.125" PointY="16.625" />
+        <EntityTypeShape EntityType="pruebasModel.mLogApp" Width="1.5" PointX="0.75" PointY="5.75" />
+        <AssociationConnector Association="pruebasModel.FK_Correo_Estatus" />
+        <AssociationConnector Association="pruebasModel.FK_Correo_TipoCorreo" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
