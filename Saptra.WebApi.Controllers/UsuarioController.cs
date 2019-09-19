@@ -53,7 +53,7 @@ namespace Saptra.WebApi.Controllers
         [Route("GetCurrentServerTime")]
         public IHttpActionResult getCurrentTime()
         {
-            return Json(new { Time = DateTime.Now });
+            return Json(new { Time = DateTime.Now, Version_App = "AR-200919" });
         }
     }
 }
